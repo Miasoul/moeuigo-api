@@ -1,0 +1,8 @@
+{
+  "name": "moeuigo-api",
+  "version": "1.0.0",
+  "description": "모의고사 PDF 다운로드 API",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}

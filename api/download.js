@@ -27,25 +27,36 @@ module.exports = async (req, res) => {
     // type 기본값 설정
     const docType = type || '문제';
 
-    // URL 조합
-    const fileName = `${year}년-고${grade}-${month}월-모의고사-${subject}-${docType}.pdf`;
-    const pdfUrl = `https://horaeng.com/storage/${encodeURIComponent(fileName)}`;
+    // 시도할 이름들: 모의고사 먼저, 안되면 모의평가
+    const examTypes = ['모의고사', '모의평가'];
+    
+    let pdfBuffer = null;
+    let successFileName = null;
 
-    console.log('Fetching PDF:', pdfUrl);
+    for (const examType of examTypes) {
+      const fileName = `${year}년-고${grade}-${month}월-${examType}-${subject}-${docType}.pdf`;
+      const pdfUrl = `https://horaeng.com/storage/${encodeURIComponent(fileName)}`;
 
-    // PDF 다운로드
-    const pdfResponse = await fetch(pdfUrl);
+      console.log('Trying:', pdfUrl);
 
-    if (!pdfResponse.ok) {
-      return res.status(404).json({
-        error: '파일을 찾을 수 없음',
-        url: pdfUrl,
-        status: pdfResponse.status
-      });
+      const pdfResponse = await fetch(pdfUrl);
+
+      if (pdfResponse.ok) {
+        pdfBuffer = await pdfResponse.buffer();
+        successFileName = fileName;
+        console.log('Found:', fileName);
+        break;
+      }
     }
 
-    // PDF를 buffer로 변환
-    const pdfBuffer = await pdfResponse.buffer();
+    // 둘 다 실패한 경우
+    if (!pdfBuffer) {
+      return res.status(404).json({
+        error: '파일을 찾을 수 없음',
+        tried: examTypes.map(t => `${year}년-고${grade}-${month}월-${t}-${subject}-${docType}.pdf`),
+        message: '모의고사와 모의평가 둘 다 없음'
+      });
+    }
 
     // base64 인코딩
     const base64Data = pdfBuffer.toString('base64');
@@ -53,7 +64,7 @@ module.exports = async (req, res) => {
     // 응답
     return res.status(200).json({
       success: true,
-      fileName: fileName,
+      fileName: successFileName,
       mimeType: 'application/pdf',
       base64: base64Data,
       size: pdfBuffer.length

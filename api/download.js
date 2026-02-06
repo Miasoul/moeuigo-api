@@ -27,14 +27,18 @@ module.exports = async (req, res) => {
     // type 기본값 설정
     const docType = type || '문제';
 
-    // 시도할 이름들: 모의고사 먼저, 안되면 모의평가
-    const examTypes = ['모의고사', '모의평가'];
+    // 시도할 파일명 패턴들
+    const filePatterns = [
+      // 모의고사: 2023년-고3-3월-모의고사-국어-문제.pdf
+      `${year}년-고${grade}-${month}월-모의고사-${subject}-${docType}.pdf`,
+      // 모의평가: 2023학년도-6월-모의평가-국어-문제.pdf
+      `${year}학년도-${month}월-모의평가-${subject}-${docType}.pdf`
+    ];
     
     let pdfBuffer = null;
     let successFileName = null;
 
-    for (const examType of examTypes) {
-      const fileName = `${year}년-고${grade}-${month}월-${examType}-${subject}-${docType}.pdf`;
+    for (const fileName of filePatterns) {
       const pdfUrl = `https://horaeng.com/storage/${encodeURIComponent(fileName)}`;
 
       console.log('Trying:', pdfUrl);
@@ -53,7 +57,7 @@ module.exports = async (req, res) => {
     if (!pdfBuffer) {
       return res.status(404).json({
         error: '파일을 찾을 수 없음',
-        tried: examTypes.map(t => `${year}년-고${grade}-${month}월-${t}-${subject}-${docType}.pdf`),
+        tried: filePatterns,
         message: '모의고사와 모의평가 둘 다 없음'
       });
     }

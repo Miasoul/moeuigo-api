@@ -34,7 +34,9 @@ module.exports = async (req, res) => {
       `${year}년-${month}월-고${grade}-모의고사-${subject}-${docType}.pdf`,
       // 모의평가: 2023학년도-6월-모의평가-국어-문제.pdf
       `${year}학년도-${month}월-모의평가-${subject}-${docType}.pdf`,
-      `${year}년-${month}월-모의평가-${subject}-${docType}.pdf`
+      `${year}년-${month}월-모의평가-${subject}-${docType}.pdf`,
+      `${year}학년도-대수능-${month}월-모의평가-${subject}-${docType}.pdf`,
+      
     ];
     
     let pdfBuffer = null;

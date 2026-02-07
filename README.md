@@ -2,11 +2,7 @@
 
 고등학교 모의고사 PDF를 다운로드하여 base64로 반환하는 API
 
-## 사용법
 
-```
-GET /api/download?year=2023&month=3&grade=3&subject=국어&type=문제
-```
 
 ### 파라미터
 

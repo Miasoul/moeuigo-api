@@ -41,6 +41,8 @@ module.exports = async (req, res) => {
       `${year}년-${month}월_고3_${subject}-1.pdf`,
       `${year}년-고3-${month}월_${subject}-${docType}.pdf`,
       `${year}학년도-${month}월-고3-${subject}-${docType}.pdf`,
+      `${year}_${month}-고3-${subject}영역-문제지.pdf`,
+      `${year}_${month}-고3-${subject}영역-정답-및-해설.pdf`.
     ];
     
     let pdfBuffer = null;

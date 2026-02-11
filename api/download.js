@@ -39,6 +39,7 @@ module.exports = async (req, res) => {
         `${year}학년도-${month}월-고3-${subject}-${docType}.pdf`,
         `${year}_${month}-고3-${subject}영역-문제지.pdf`,
         `${year}_${month}-고3-${subject}영역-정답-및-해설.pdf`,
+        `${year}학년도-${month}월-모의평가-${subject}-정답.pdf`,
       ];
     }
 
